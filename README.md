@@ -125,4 +125,4 @@ Update the DATABASE_URL environment variable in your .env file with your actual 
 Develop a frontend component (using React, Vue, Angular, or another framework) to interact with the API endpoints.
 Implement user interface elements for chat, contacts, sending/receiving messages, and (potentially) voice/video calls.
 
-![Image description](Capture.png)
+![Image description](Capture.JPG)
