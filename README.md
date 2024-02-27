@@ -2,11 +2,47 @@
 
 ## Description
 
+What is the WhatsApp Clone App?
+
+This application is a real-time chat and communication platform inspired by the core functionalities of WhatsApp. It enables users to:
+
+Send and receive text messages, audio messages, and images: Interact with others through various message formats in real-time.
+Initiate voice and video calls: Communicate seamlessly through audio and video calls, fostering a more personal experience (Note: This feature might require further development for complete functionality).
+Manage contacts and online status: View a list of your contacts and identify their current online status.
+Key Technologies:
+
+## Backend:
+
+Node.js: JavaScript runtime environment for server-side operations.
+Express: Web framework built on top of Node.js for creating web applications.
+Socket.IO: Real-time communication library enabling bidirectional event-based exchange.
+Prisma: Data access and manipulation tool (Object Relational Mapper - ORM) for interacting with databases.
+Multer: Middleware for handling file uploads (specifically used for audio and image messages).
+Database (Choose one):
+PostgreSQL: Open-source, object-relational database management system (DBMS).
+MySQL: Open-source relational DBMS popular for web applications.
+SQLite: Self-contained, file-based database suitable for embedded applications.
+
 This project aims to replicate core functionalities of WhatsApp, allowing users to:
 
 Send and receive text messages, audio messages, and images in real-time.
 Initiate voice and video calls for seamless communication (Note: This feature might require further refinements).
 Manage contacts and view their online status.
+
+## Features:
+
+- Authentication: Users can potentially sign in and create accounts (implementation not provided in the given code).
+- Messaging:
+  Send and receive text, audio, and image messages in real-time using Socket.IO.
+  View message history between users.
+- Contacts:
+  Manage a list of contacts.
+  See online/offline status of contacts (if implemented).
+  Real-Time Communication (Socket.IO):
+  Enables features like:
+  Presence management (showing online users)
+  Sending and receiving messages and other updates instantly
+  (Potentially) Enabling voice and video calls (requires further work)
 
 ## Technologies Used
 
@@ -88,3 +124,5 @@ Update the DATABASE_URL environment variable in your .env file with your actual 
 
 Develop a frontend component (using React, Vue, Angular, or another framework) to interact with the API endpoints.
 Implement user interface elements for chat, contacts, sending/receiving messages, and (potentially) voice/video calls.
+
+![Image description](Capture.png)
