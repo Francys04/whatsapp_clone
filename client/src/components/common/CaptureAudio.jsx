@@ -1,3 +1,11 @@
+// Context: Imports useStateProvider and reducerCases from context for accessing data and dispatching actions.
+// API Routes: Imports ADD_AUDIO_MESSAGE_ROUTE for the API endpoint to send audio messages.
+// Axios: Imports axios for making HTTP requests.
+// Firebase: Imports setPersistence from Firebase Auth (not used in this component).
+// React Hooks: Imports useState, useRef, and useEffect for state management, refs, and side effects.
+// Icons: Imports icons from react-icons/fa and react-icons/md.
+// WaveSurfer: Imports WaveSurfer for audio visualization and playback.
+
 import { useStateProvider } from "@/context/StateContext";
 import { reducerCases } from "@/context/constants";
 import { ADD_AUDIO_MESSAGE_ROUTE } from "@/utils/ApiRoutes";
@@ -14,6 +22,20 @@ import {
 import { MdSend } from "react-icons/md";
 import WaveSurfer from "wavesurfer.js";
 
+// Defines the functional component named AudioRecorder and accepts a hide function prop to hide the recorder.
+// Context:
+// userInfo: User information from context.
+// currentChatUser: Current chat user information from context.
+// socket: Socket object from context.
+// Component state:
+// isRecording: Tracks whether audio recording is in progress (boolean).
+// recordingDuration: Duration of the recording in seconds (number).
+// currentPlaybackTime: Current playback time of the audio (number).
+// totalDuration: Total duration of the recorded audio (number).
+// Refs:
+// waveformRef: Ref for the WaveSurfer container element.
+// audioRef: Ref for the hidden audio element used for recording.
+// mediaRecorderRef: Ref for the MediaRecorder object
 const AudioRecorder = ({ hide }) => {
   const [{ userInfo, currentChatUser, socket }, dispatch] = useStateProvider();
   const [isRecording, setIsRecording] = useState(false);
@@ -28,6 +50,9 @@ const AudioRecorder = ({ hide }) => {
   const mediaRecorderRef = useRef(null);
   const waveformRef = useRef(null);
 
+  // Runs whenever isRecording changes.
+  // If isRecording is true, sets up an interval to update recordingDuration and totalDuration every second.
+  // Cleanup function clears the interval when the component unmounts or isRecording changes to false.
   useEffect(() => {
     let interval;
     if (isRecording) {
@@ -44,6 +69,11 @@ const AudioRecorder = ({ hide }) => {
     };
   }, [isRecording]);
 
+  //   Runs only once after the component mounts.
+  // Creates a WaveSurfer instance and assigns it to the waveform state.
+  // Sets up event listeners for the WaveSurfer:
+  // finish: Called when playback finishes.
+  // Cleanup function destroys the WaveSurfer instance when the component unmounts.
   useEffect(() => {
     const wavesurfer = WaveSurfer.create({
       container: waveformRef.current,
@@ -71,6 +101,20 @@ const AudioRecorder = ({ hide }) => {
     }
   }, [waveform]);
 
+  //   Resets recording and playback states.
+  // Sets isRecording to true.
+  // Requests microphone access using navigator.mediaDevices.getUserMedia.
+  // On success:
+  // Creates a MediaRecorder instance and stores it in the mediaRecorderRef.
+  // Sets the audio source for the hidden audio element (audioRef) to the captured media stream.
+  // Initializes an empty array to store audio chunks.
+  // Sets up event listeners for the MediaRecorder:
+  // dataavailable: Pushes recorded audio chunks to the array.
+  // stop: Creates a Blob from the chunks, creates an audio URL, and sets up the recorded audio:
+  // Sets recordedAudio to a new Audio object with the audio URL.
+  // Loads the audio URL into the WaveSurfer for visualization.
+  // Starts the MediaRecorder.
+  // On error: Logs the error message.
   const handleStartRecording = () => {
     setRecordingDuration(0);
     setCurrentPlaybackTime(0);
@@ -104,7 +148,11 @@ const AudioRecorder = ({ hide }) => {
   };
 
   const [renderedAudio, setRenderedAudio] = useState(null);
-
+  // Checks if there's a MediaRecorder instance and recording is in progress.
+  // Stops the recording and WaveSurfer playback.
+  // Adds event listeners to the MediaRecorder:
+  // dataavailable: Pushes recorded audio chunks to a new array.
+  // stop: Creates an MP3 Blob, creates an audio file object, and sets renderedAudio.
   const handleStopRecording = () => {
     if (mediaRecorderRef.current && isRecording) {
       mediaRecorderRef.current.stop();

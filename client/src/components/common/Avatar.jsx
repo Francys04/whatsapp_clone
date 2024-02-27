@@ -6,6 +6,13 @@ import PhotoPicker from "./PhotoPicker";
 import PhotoLibrary from "./PhotoLibrary";
 import CapturePhoto from "./CapturePhoto";
 
+// hover: Tracks whether the avatar is hovered over (boolean).
+// showPhotoLibrary: Controls the visibility of the photo library (boolean).
+// grabImage: Triggers the hidden file input for selecting an image (boolean).
+// isContextMenuVisible: Tracks the visibility of the context menu (boolean).
+// isFirstRun: Manages a flag to handle initial context menu click (boolean).
+// showCapturePhoto: Controls the visibility of the capture photo component (boolean).
+// contextMenuCordinates: Stores the coordinates for positioning the context menu (object).
 export default function Avatar({ type, image, setImage }) {
   const [hover, setHover] = useState(false);
   const [showPhotoLibrary, setShowPhotoLibrary] = useState(false);
@@ -18,6 +25,11 @@ export default function Avatar({ type, image, setImage }) {
     y: 0,
   });
 
+  //   contextMenuOptions: Defines the options for the context menu:
+  // "Take Photo": Opens the capture photo component.
+  // "Choose from Library": Opens the photo library component.
+  // "Upload Photo": Triggers the hidden file input for selecting an image.
+  // "Remove Photo": Resets the image to the default avatar.
   const contextMenuOptions = [
     {
       name: "Take Photo",
@@ -78,6 +90,14 @@ export default function Avatar({ type, image, setImage }) {
     setIsContextMenuVisible(true);
   };
 
+  // photoPickerOnChange: Handles changes in the hidden file input (triggered by the grabImage state).
+  // Accesses the selected file from the event.
+  // Creates a new FileReader object.
+  // Creates a temporary image element to hold the loaded image data.
+  // Defines a function to be called when the file is read successfully:
+  // Sets the image source and data attribute of the temporary image element.
+  // Starts reading the selected file using the FileReader.
+  // Uses a setTimeout to set the image prop with the temporary image's source after a slight delay, allowing time for the image to load.
   const photoPickerOnChange = async (e) => {
     const file = e.target.files[0];
     const reader = new FileReader();
@@ -158,3 +178,19 @@ export default function Avatar({ type, image, setImage }) {
     </>
   );
 }
+
+// Side Effects (useEffect):
+
+// First useEffect: Runs whenever grabImage changes.
+
+// If grabImage is true:
+// Accesses the hidden file input element with ID "photo-picker" and simulates a click event to open the file selection dialog.
+// Sets a temporary body event listener to reset grabImage when the user clicks outside the file selection dialog.
+// Second useEffect: Manages context menu visibility behavior.
+
+// Runs whenever isContextMenuVisible changes.
+// If isContextMenuVisible is true, adds a click event listener to the window.
+// The event listener checks the isFirstRun flag:
+// If not the first run (meaning the context menu was already opened), hides it and resets the flag.
+// If the first run, sets the flag to false to allow subsequent clicks to toggle the menu.
+// Cleanup function removes the event listener when the component unmounts or isContextMenuVisible changes.

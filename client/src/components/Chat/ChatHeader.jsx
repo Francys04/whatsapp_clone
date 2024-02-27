@@ -7,15 +7,21 @@ import { IoVideocam } from "react-icons/io5";
 import { useStateProvider } from "@/context/StateContext";
 import { reducerCases } from "@/context/constants";
 import ContextMenu from "../common/ContextMenu";
-
+// Defines a functional component named ChatHeader and marks it as the default export.
 export default function ChatHeader() {
+  //  Uses the useStateProvider hook to access various data from the context:
+  // userInfo: User's own information.
+  // currentChatUser: Information about the currently chatted user.
+  // onlineUsers: List of online user IDs.
+  // dispatch: Function to dispatch actions to the context reducer.
   const [{ userInfo, currentChatUser, onlineUsers }, dispatch] =
     useStateProvider();
-
+  // Creates state using useState to store the x and y coordinates of the context menu when opened.
   const [contextMenuCordinates, setContextMenuCordinates] = useState({
     x: 0,
     y: 0,
   });
+  // This function handles showing the context menu
   const [isContextMenuVisible, setIsContextMenuVisible] = useState(false);
 
   const showContextMenu = (e) => {
@@ -33,7 +39,14 @@ export default function ChatHeader() {
       },
     },
   ];
-
+  // This function handles initiating a video call:
+  // It dispatches an action to the context reducer using dispatch.
+  // The action type is SET_VIDEO_CALL.
+  // It constructs a video call object with details:
+  // User information from currentChatUser.
+  // Call initiation type as "out-going".
+  // Call type as "video".
+  // A unique roomId generated using Date.now().
   const handleVideoCall = () => {
     dispatch({
       type: reducerCases.SET_VIDEO_CALL,
@@ -45,7 +58,7 @@ export default function ChatHeader() {
       },
     });
   };
-
+  // This function is similar to handleVideoCall but creates a voice call object with callType set to "audio".
   const handleVoiceCall = () => {
     dispatch({
       type: reducerCases.SET_VOICE_CALL,

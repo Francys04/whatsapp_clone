@@ -1,3 +1,9 @@
+// Firebase & React Libraries: Imports necessary libraries for authentication, state management, and UI rendering.
+// Socket.io: Imports io from socket.io-client for socket communication.
+// Custom Components: Imports various custom components used within Main.
+// Utils: Imports useStateProvider for accessing shared state, reducerCases for state update constants,
+// axios for making HTTP requests, and API route definitions.
+
 import { onAuthStateChanged } from "firebase/auth";
 import React, { useEffect, useRef, useState } from "react";
 import { io } from "socket.io-client";
@@ -18,6 +24,11 @@ import IncomingCall from "./common/IncomingCall";
 import IncomingVideoCall from "./common/IncomingVideoCall";
 import SearchMessages from "./Chat/SearchMessages";
 
+// useStateProvider: Destructures state and dispatch function from the context provider.
+// useRouter: Gets access to the routing functionality.
+// socket: Uses a ref to hold the socket instance.
+// redirectLogin: State variable to handle login redirection.
+// socketEvent: State variable to track socket event handling.
 export default function Main() {
   const [
     {
@@ -40,6 +51,12 @@ export default function Main() {
     if (redirectLogin) router.push("/login");
   }, [redirectLogin]);
 
+  //   Listens for authentication state changes using onAuthStateChanged.
+  // If no user is logged in (!currentUser), sets redirectLogin to true.
+  // If user info is not yet retrieved and a user is logged in:
+  // Fetches user data using axios.post to the CHECK_USER_ROUTE.
+  // If data retrieval fails (!data.status), redirects to login.
+  // Otherwise, updates state using dispatch with user information.
   onAuthStateChanged(firebaseAuth, async (currentUser) => {
     if (!currentUser) setRedirectLogin(true);
     if (!userInfo && currentUser?.email) {
@@ -71,6 +88,17 @@ export default function Main() {
     }
   }, [userInfo]);
 
+  //   Runs when socket.current or socketEvent state changes.
+  // If socket.current exists and socketEvent is false:
+  // Sets up event listeners for various socket events:
+  // "msg-recieve": receives new messages and updates state using dispatch.
+  // "online-users": receives online users and updates state using dispatch.
+  // "mark-read-recieve": updates message read status in state using dispatch.
+  // "incoming-voice-call": receives incoming voice call information and updates state using dispatch.
+  // "voice-call-rejected": handles rejected voice call and updates state using dispatch.
+  // "incoming-video-call": receives incoming video call information and updates state using dispatch.
+  // "video-call-rejected": handles rejected video call and updates state using dispatch.
+  // Sets socketEvent to true to prevent attaching listeners repeatedly.
   useEffect(() => {
     if (socket.current && !socketEvent) {
       socket.current.on("msg-recieve", (data) => {
@@ -137,6 +165,10 @@ export default function Main() {
     }
   }, [socket.current]);
 
+  //   Runs when currentChatUser state changes.
+  // Defines an async function getMessages to fetch messages from the server using axios.get.
+  // If currentChatUser exists and the user is present in the contact list:
+  // Calls getMessages to retrieve messages for the current chat.
   useEffect(() => {
     const getMessages = async () => {
       const {
@@ -186,3 +218,22 @@ export default function Main() {
     </>
   );
 }
+
+// Renders the following conditionally based on state:
+// Incoming Calls:
+// IncomingCall component if incomingVoiceCall is present.
+// IncomingVideoCall component if incomingVideoCall is present.
+// Video Call:
+// Video call UI (VideoCall component) within a container with specific styles if videoCall is present.
+// Voice Call:
+// Voice call UI (VoiceCall component) within a container with specific styles if voiceCall is present.
+// Chat Interface (default):
+// Grid layout with columns.
+// ChatList component on the left.
+// Conditionally renders content based on currentChatUser:
+// If currentChatUser exists:
+// Grid layout with or without a second column for search messages depending on messageSearch state.
+// Chat component for chat functionality.
+// SearchMessages component (if messageSearch is true) for searching messages.
+// If currentChatUser does not exist:
+// Empty component for displaying a placeholder when no chat is selected.

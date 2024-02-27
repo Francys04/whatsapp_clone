@@ -1,6 +1,27 @@
 import { renameSync } from "fs";
 import getPrismaInstance from "../utils/PrismaClient.js";
+// renameSync: Function from fs module for renaming files.
+// getPrismaInstance: Function to get a Prisma client instance (likely imported from PrismaClient.js).
+// getMessages Endpoint:
 
+// Purpose: Retrieves messages between two users (from and to).
+// Parameters:
+// req: Incoming HTTP request object.
+// res: Outgoing HTTP response object.
+// next: Function to pass any errors to the middleware.
+// Logic:
+// Connects to the Prisma database using getPrismaInstance.
+// Extracts from and to user IDs from request parameters.
+// Queries the messages table using findMany to find messages where:
+// senderId is equal to from and recieverId is equal to to, or
+// senderId is equal to to and recieverId is equal to from.
+// Sorts the messages chronologically by id.
+// Initializes an empty array unreadMessages to store unread message IDs.
+// Iterates through messages:
+// If a message is unread (messageStatus is not "read") and belongs to the recipient (senderId is equal to to), mark it as read and add its ID to unreadMessages.
+// Updates unread messages using prisma.messages.updateMany by setting their messageStatus to "read".
+// Returns a JSON response with status code 200 and the retrieved messages.
+// Catches any errors and passes them to the next function for handling.
 export const getMessages = async (req, res, next) => {
   try {
     const prisma = getPrismaInstance();
@@ -47,6 +68,23 @@ export const getMessages = async (req, res, next) => {
     next(err);
   }
 };
+// addMessage Endpoint:
+
+// Purpose: Creates a new message between two users.
+// Parameters: Same as getMessages.
+// Logic:
+// Connects to the Prisma database using getPrismaInstance.
+// Extracts message, from, and to from the request body.
+// Checks if all required fields are present.
+// Uses getUser from onlineUsers to check if the recipient is online (optional logic).
+// Creates a new message using prisma.messages.create:
+// Sets the message content.
+// Connects the sender and receiver using sender and reciever relations with their IDs.
+// Sets the messageStatus to "delivered" if the recipient is online, otherwise "sent".
+// Includes the sender and receiver user details in the response using include option.
+// Returns a JSON response with status code 201 and the newly created message.
+// Returns a 400 error message if any required field is missing.
+// Catches any errors and passes them to the next function for handling.
 
 export const addMessage = async (req, res, next) => {
   try {
@@ -72,7 +110,30 @@ export const addMessage = async (req, res, next) => {
     next(err);
   }
 };
+// getInitialContactsWithMessages Endpoint:
 
+// Purpose: Retrieves initial contacts (including sent and received messages) for a user.
+// Parameters: Same as getMessages.
+// Logic:
+// Extracts the from (user) ID from request parameters.
+// Connects to the Prisma database using getPrismaInstance.
+// Fetches the user with the provided ID using prisma.user.findUnique:
+// Includes sentMessages and recievedMessages with relations:
+// Includes reciever and sender user details in each message.
+// Sorts messages by creation time (descending order).
+// Combines both sent and received messages into a single array.
+// Sorts the combined messages by creation time (descending order).
+// Creates a Map to store information about contacts (users).
+// Creates an empty array messageStatusChange to store IDs of messages needing status update.
+// Iterates through messages:
+// Calculates the "other user" ID based on the sender.
+// Marks unread messages as read and updates their status if they belong to the recipient.
+// Builds a user object (contact) for each unique contact ID, including:
+// Message details (ID, type, message, status, creation time).
+// Sender or receiver details depending on the message direction.
+// totalUnreadMessages (calculated for the recipient's received messages).
+// Adds the user object to the users Map.
+// Updates message statuses from "sent" to "delivered" if needed (using `prisma.messages.
 export const getInitialContactsWithMessages = async (req, res, next) => {
   try {
     const userId = parseInt(req.params.from);

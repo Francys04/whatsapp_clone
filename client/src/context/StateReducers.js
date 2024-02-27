@@ -1,5 +1,20 @@
 import { reducerCases } from "./constants";
-
+// Defines the initial state of the application as an object with various properties:
+// userInfo: Stores user information (undefined initially).
+// newUser: Boolean indicating if a new user is being created (false initially).
+// contactsPage: Boolean indicating if the "all contacts" page is being viewed (false initially).
+// messageSearch: Boolean indicating if the message search is active (false initially).
+// currentChatUser: Selected chat user object (undefined initially).
+// socket: Socket instance (undefined initially).
+// messages: Array of messages for the current chat (empty initially).
+// userContacts: Array of user contacts (empty initially).
+// videoCall: Information about an ongoing video call (undefined initially).
+// voiceCall: Information about an ongoing voice call (undefined initially).
+// incomingVoiceCall: Information about an incoming voice call (undefined initially).
+// incomingVideoCall: Information about an incoming video call (undefined initially).
+// onlineUsers: Array of online users (empty initially).
+// contactSearch: String representing the current contact search term (empty initially).
+// filteredContacts: Array of contacts filtered based on the search term (empty initially).
 export const initialState = {
   userInfo: undefined,
   newUser: false,
@@ -288,3 +303,10 @@ const reducer = (state, action) => {
 };
 
 export default reducer;
+
+// This is the core function responsible for handling state updates based on dispatched actions.
+// It takes the current state and an action object as arguments.
+// The switch statement iterates through different action types represented by action.type.
+// For each action type:
+// It creates a new state object using the spread operator (...state) to avoid mutating the original state.
+// It updates specific properties of the new state object based on the action payload and logic specific to the action type.

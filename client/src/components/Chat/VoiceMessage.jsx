@@ -7,6 +7,12 @@ import { HOST } from "@/utils/ApiRoutes";
 import { calculateTime } from "@/utils/CalculateTime";
 import MessageStatus from "../common/MessageStatus";
 
+// audioMessage: Stores the created Audio object for playback.
+// isPlaying: Tracks whether the audio is currently playing.
+// waveformReady: Tracks whether the waveform visualization is ready.
+// currentPlaybackTime: Stores the current playback time in seconds.
+// totalDuration: Stores the total duration of the voice message in seconds.
+
 function VoiceMessage({ message }) {
   const [{ currentChatUser, userInfo }] = useStateProvider();
   const [audioMessage, setAudioMessage] = useState(null);
@@ -48,6 +54,11 @@ function VoiceMessage({ message }) {
     });
   }, [message.message]);
 
+  // handlePlayAudio:
+  // Stops any ongoing playback in waveform and audio element.
+  // Plays the audio using both waveform (for visualization) and the audioMessage element.
+  // Sets isPlaying to true to reflect the playing state.
+
   const handlePlayAudio = () => {
     if (audioMessage) {
       waveform.current.stop();
@@ -56,7 +67,9 @@ function VoiceMessage({ message }) {
       setIsPlaying(true);
     }
   };
-
+  // handlePauseAudio:
+  // Stops playback in both waveform and the audioMessage element.
+  // Sets isPlaying to false to reflect the paused state.
   const handlePauseAudio = () => {
     if (audioMessage) {
       waveform.current.stop();
@@ -76,7 +89,7 @@ function VoiceMessage({ message }) {
       };
     }
   }, [audioMessage]);
-
+  // Takes a time in seconds and formats it into minutes:seconds string with leading zeros.
   const formatTime = (time) => {
     const minutes = Math.floor(time / 60);
     const seconds = Math.floor(time % 60);

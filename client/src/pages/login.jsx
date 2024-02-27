@@ -1,3 +1,9 @@
+// axios: Used for making HTTP requests to an API.
+// GoogleAuthProvider, signInWithPopup: Functions from Firebase for Google Sign-in.
+// React, useEffect: React and a hook for handling side effects.
+// FcGoogle: Icon component for Google.
+// firebaseAuth: Imported from FirebaseConfig (likely containing Firebase configuration).
+
 import axios from "axios";
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import React, { useEffect } from "react";
@@ -10,6 +16,11 @@ import Image from "next/image";
 import { reducerCases } from "@/context/constants";
 import { CHECK_USER_ROUTE } from "@/utils/ApiRoutes";
 
+// const router = useRouter(): Creates a router object for navigation.
+// const [{ userInfo, newUser }, dispatch] = useStateProvider(): Destructures state and dispatch from useStateProvider.
+// useEffect:
+// Logs the userInfo object for debugging purposes.
+// Redirects to the home page (/) if userInfo exists and newUser is false (user already logged in and not new).
 export default function Login() {
   const router = useRouter();
   const [{ userInfo, newUser }, dispatch] = useStateProvider();
@@ -22,6 +33,22 @@ export default function Login() {
     const {
       user: { displayName: name, email, photoURL: profileImage },
     } = await signInWithPopup(firebaseAuth, provider);
+
+    //     login: Asynchronous function for handling Google sign-in.
+    // const provider = new GoogleAuthProvider(): Creates a GoogleAuthProvider.
+    // try...catch: Handles potential errors during sign-in.
+    // signInWithPopup: Attempts sign-in with Google.
+    // On success:
+    // Extracts user information (name, email, profile picture).
+    // Makes a POST request using axios to CHECK_USER_ROUTE with the email.
+    // If user doesn't exist (new user):
+    // Sets newUser to true in state.
+    // Sets userInfo state with extracted user information and "Available" status.
+    // Redirects to /onboarding.
+    // If user exists:
+    // Sets userInfo state with retrieved user information.
+    // Redirects to the home page (/).
+    // On error: Logs the error message.
     const login = async () => {
       const provider = new GoogleAuthProvider();
       try {

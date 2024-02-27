@@ -3,6 +3,9 @@ import { reducerCases } from "@/context/constants";
 import { useState } from "react";
 import { BiFilter, BiSearchAlt2, BiArrowBack } from "react-icons/bi";
 
+// const [{ contactSearch }, dispatch] = useStateProvider();: Destructures the following from context:
+// contactSearch: The current search term for contacts.
+// dispatch: A function for dispatching actions to update the context state.
 export default function SearchBar() {
   const [{ contactSearch }, dispatch] = useStateProvider();
 
@@ -33,3 +36,17 @@ export default function SearchBar() {
     </div>
   );
 }
+
+// Search Input:
+
+// Creates a container with styling, rounding, and flex layout.
+// Defines a search icon using the BiSearchAlt2 icon.
+// Renders an input field with the following properties:
+// Type: "text" for entering search terms.
+// Placeholder: "Search or start new chat".
+// Background: transparent to blend with the container.
+// Text color: white.
+// Value: Set to the current contactSearch value from context.
+// On change: Triggers an anonymous function that dispatches an action using dispatch:
+// Action type: reducerCases.SET_CONTACT_SEARCH.
+// Payload: An object containing the updated contactSearch value from the event target.

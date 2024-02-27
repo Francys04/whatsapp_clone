@@ -1,3 +1,10 @@
+// express: Framework for building web applications.
+// dotenv: Loads environment variables from a .env file.
+// cors: Enables cross-origin resource sharing (CORS) for handling requests from different origins.
+// AuthRoutes: Imported routes for handling authentication logic.
+// MessageRoutes: Imported routes for handling message-related operations.
+// Server: Class from socket.io
+
 import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
@@ -5,7 +12,14 @@ import AuthRoutes from "./routes/AuthRoutes.js";
 import MessageRoutes from "./routes/MessageRoutes.js";
 import { Server } from "socket.io";
 
+// loads environment variables from the .env file (likely containing the server port).
 dotenv.config();
+
+// app: Creates an Express application instance.
+// cors(): Enables CORS with default settings (allowing all origins).
+// app.use(express.json()): Parses incoming JSON request bodies.
+// Static File Serving:
+// Makes the uploads/recordings and uploads/images directories publicly accessible for serving audio and image files.
 const app = express();
 
 app.use(cors());
@@ -20,6 +34,16 @@ app.use("/api/messages", MessageRoutes);
 const server = app.listen(process.env.PORT, () => {
   console.log(`server started on port ${process.env.PORT}`);
 });
+
+// "add-user": Captures the user ID upon connection, adds the user to the onlineUsers map, and broadcasts the online user list to all connected clients.
+// "signout": Removes the user from the onlineUsers map and broadcasts the updated online user list.
+// "outgoing-voice-call": Attempts to find the recipient's socket ID, emits an "incoming-voice-call" event to the recipient if online, otherwise emits a "voice-call-offline" event to the sender.
+// "reject-voice-call": Finds the caller's socket ID and emits a "voice-call-rejected" event to them.
+// "outgoing-video-call": Similar to "outgoing-voice-call" but emits an "incoming-video-call" event.
+// "accept-incoming-call": Finds the caller's socket ID and emits an "accept-call" event to them.
+// "reject-video-call": Similar to "reject-voice-call" but emits a "video-call-rejected" event.
+// "send-msg": Finds the recipient's socket ID and emits an "msg-recieve" event with message details.
+// "mark-read": Finds the recipient's socket ID and emits a "mark-read-recieve" event containing message and sender information.
 
 const io = new Server(server, {
   cors: {

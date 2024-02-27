@@ -5,12 +5,18 @@ import { BiFilter, BiSearchAlt2, BiArrowBack } from "react-icons/bi";
 import { reducerCases } from "@/context/constants";
 import { calculateTime } from "@/utils/CalculateTime";
 
+// searchBarFocus, setSearchBarFocus: Track whether the search bar has focus.
+// searchTerm, setSearchTerm: Store and manage the search query entered by the user.
+// searchedMessages, setSearchedMessages: Store the filtered messages based on the search query.
 function SearchMessages() {
+  // Retrieves context values for the current chat user, all messages, and the dispatch function for actions.
   const [{ currentChatUser, messages }, dispatch] = useStateProvider();
   const [searchBarFocus, setSearchBarFocus] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [searchedMessages, setSearchedMessages] = useState([]);
 
+  // Filters messages based on the search query, storing matching text messages in searchedMessages.
+  // Clears searchedMessages if there's no search query.
   useEffect(() => {
     if (searchTerm) {
       setSearchedMessages(

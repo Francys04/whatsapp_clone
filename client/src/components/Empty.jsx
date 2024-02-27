@@ -10,3 +10,10 @@ function Empty() {
 }
 
 export default Empty;
+
+// Returns the JSX for an empty state representation:
+// A div element:
+// Sets border styles with specific classes: conversation border, left border, full width, header background color, flex layout with column direction, full viewport height, bottom border with specific size and color (green icon), centered content.
+// An Image component:
+// Displays an image from "/whatsapp.gif" with alternate text "whatsapp-gif".
+// Sets the image dimensions (height and width) to 300 pixels.

@@ -1,9 +1,19 @@
+// React Hooks: Imports useEffect, useRef, and useState for state management and refs.
+// Icon: Imports IoClose icon from react-icons/io5.
+
 import React, { useEffect, useRef, useState } from "react";
 import { IoClose } from "react-icons/io5";
-
+// Defines the functional component named CapturePhoto and accepts props for setImage (function to set the captured image)
+// and hide (function to close the capture window).
 export default function CapturePhoto({ setImage, hide }) {
   const videoRef = useRef();
-
+  // Runs only once after the component mounts.
+  // Defines a variable stream to hold the media stream.
+  // Defines an async function startCamera that:
+  // Requests access to the user's camera using navigator.mediaDevices.getUserMedia.
+  // Sets the video source of the element referenced by videoRef to the captured stream.
+  // Calls startCamera to start the camera.
+  // Cleanup function stops the media stream tracks when the component unmounts.
   useEffect(() => {
     let stream;
     const startCamera = async () => {
@@ -18,7 +28,12 @@ export default function CapturePhoto({ setImage, hide }) {
       stream?.getTracks().forEach((track) => track.stop());
     };
   }, []);
-
+  // const captureImage = () => { ... }: Defines a function to capture an image from the video.
+  // Creates a canvas element.
+  // Gets the 2D context of the canvas.
+  // Draws the current frame of the video onto the canvas (scaled down to 300x150 pixels).
+  // Converts the canvas content to a data URL representing a JPEG image and sets it as the image using setImage.
+  // Calls hide with false to close the capture window after capturing the image
   const captureImage = () => {
     const canvas = document.createElement("canvas");
     canvas.getContext("2d")?.drawImage(videoRef.current, 0, 0, 300, 150);

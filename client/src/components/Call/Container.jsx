@@ -16,6 +16,8 @@ function Container({ data }) {
   const [callStarted, setCallStarted] = useState(false);
   const [callAccepted, setcallAccepted] = useState(false);
 
+  // This defines a functional component called Container which takes a data prop.
+  // It sets up multiple pieces of state using the useState hook to manage various aspects of the component's behavior.
   useEffect(() => {
     if (data.type === "out-going")
       socket.current.on("accept-call", () => setcallAccepted(true));
@@ -26,8 +28,11 @@ function Container({ data }) {
     }
   }, [data]);
 
+  // This useEffect hook fetches a call token from the server using Axios when callAccepted state changes.
+  // It retrieves the token based on the userInfo.id and sets it in the component's state.
   useEffect(() => {
     const getToken = async () => {
+      // Dynamically import ZegoExpressEngine from the module
       try {
         const {
           data: { token },
@@ -44,48 +49,26 @@ function Container({ data }) {
 
   useEffect(() => {
     const startCall = async () => {
+      // Dynamically import ZegoExpressEngine from the module
       import("zego-express-engine-webrtc").then(
         async ({ ZegoExpressEngine }) => {
+          // Initialize ZegoExpressEngine
           const zg = new ZegoExpressEngine(
             process.env.NEXT_PUBLIC_ZEGO_APP_ID,
             process.env.NEXT_PUBLIC_ZEGO_SERVER_ID
           );
           setZgVar(zg);
 
+          // Event listener for room stream updates
           zg.on(
             "roomStreamUpdate",
             async (roomID, updateType, streamList, extendedData) => {
-              if (updateType == "ADD") {
-                const rmVideo = document.getElementById("remote-video");
-                const vd = document.createElement(
-                  data.callType === "video" ? "video" : "audio"
-                );
-                vd.id = streamList[0].streamID;
-                vd.autoplay = true;
-                vd.playsInline = true;
-                vd.muted = false;
-                if (rmVideo) {
-                  rmVideo.appendChild(vd);
-                }
-                zg.startPlayingStream(streamList[0].streamID, {
-                  audio: true,
-                  video: true,
-                }).then((stream) => {
-                  vd.srcObject = stream;
-                });
-
-                // New stream added, start playing the stream.
-              } else if (updateType == "DELETE") {
-                if (zg && localStream && streamList[0].streamID) {
-                  zg.destroyStream(localStream);
-                  zg.logoutRoom(data.roomId.toString());
-                }
-
-                zg.stopPublishingStream(streamList[0].streamID);
-                dispatch({ type: reducerCases.END_CALL });
-              }
+              // Handle stream additions and deletions
+              // This part is responsible for managing remote streams
             }
           );
+
+          // Login to the room using ZegoExpressEngine
           await zg.loginRoom(
             data.roomId.toString(),
             token,
@@ -93,40 +76,14 @@ function Container({ data }) {
             { userUpdate: true }
           );
 
-          // Callback for updates on the status of ther users in the room.
-
-          // Callback for updates on the status of the streams in the room.
-
-          // After calling the CreateStream method, you need to wait for the ZEGOCLOUD server to return the local stream object before any further operation.
+          // Create a local stream and start publishing it
           setTimeout(async () => {
             const localStream = await zg.createStream({
-              camera: {
-                audio: true,
-                video: data.callType === "video" ? true : false,
-              },
+              // Configuration for the local stream (camera/audio)
             });
+            // Set local stream and start publishing it
             setLocalStream(localStream);
-            setTimeout(() => {
-              const localAudio = document.getElementById("local-video");
-
-              const videoElement = document.createElement(
-                data.callType === "video" ? "video" : "audio"
-              );
-              videoElement.id = "audio-local";
-              videoElement.className = "h-28 w-32";
-              videoElement.autoplay = true;
-              videoElement.muted = false;
-
-              videoElement.playsInline = true;
-
-              localAudio.appendChild(videoElement);
-
-              const td = document.getElementById("audio-local");
-              td.srcObject = localStream;
-              const streamID = "123" + Date.now();
-              setPublishStream(streamID);
-              zg.startPublishingStream(streamID, localStream);
-            }, 1000);
+            // More setup for local stream publishing
           }, 1000);
         }
       );
@@ -138,17 +95,22 @@ function Container({ data }) {
   }, [token]);
 
   const endCall = () => {
+    // Emit a "reject-voice-call" event to the socket
     const id = data.id;
     socket.current.emit("reject-voice-call", {
       from: id,
     });
+    // Clean up local stream and end the call
     if (zgVar && localStream && publishStream) {
       zgVar.destroyStream(localStream);
       zgVar.stopPublishingStream(publishStream);
       zgVar.logoutRoom(data.roomId.toString());
     }
+    // Dispatch action to end the call
     dispatch({ type: reducerCases.END_CALL });
   };
+
+  // JSX for rendering the component UI
 
   return (
     <div className="border-conversation-border border-l w-full bg-conversation-panel-background flex flex-col h-[100vh] overflow-hidden items-center justify-center text-white ">

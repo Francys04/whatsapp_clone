@@ -3,15 +3,30 @@ import { reducerCases } from "@/context/constants";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
 
+// const [{ incomingVideoCall, socket }, dispatch] = useStateProvider();: Uses the useStateProvider hook to access state:
+// incomingVideoCall: Object containing information about the incoming call.
+// socket: Reference to the socket object used for communication.
+// dispatch function to update state using the reducer.
+// const [audioElement, setAudioElement] = useState(null);: Creates a state variable audioElement
+// to hold a reference to the audio object (initially null).
 function IncomingVideoCall() {
   const [{ incomingVideoCall, socket }, dispatch] = useStateProvider();
   const [audioElement, setAudioElement] = useState(null);
-
+  // First useEffect: Runs only once after the component mounts.
+  // Creates an audio element and sets its source to "/call-sound.mp3".
+  // Sets the loop property to true to make the audio play continuously.
+  // Sets the audioElement state to the created audio object.
+  // Cleanup function removes any event listeners associated with the audio element when the component unmounts to prevent memory leaks.
   useEffect(() => {
     const audio = new Audio("/call-sound.mp3");
     audio.loop = true;
     setAudioElement(audio);
   }, []);
+
+  // Second useEffect: Runs whenever the audioElement state changes.
+  // Checks if audioElement is not null (meaning it exists).
+  // If so, plays the audio and sets a cleanup function to pause the audio,
+  //  reset the current time to 0, and remove potential event listeners when the component unmounts or audioElement changes to null.
 
   useEffect(() => {
     if (audioElement) {

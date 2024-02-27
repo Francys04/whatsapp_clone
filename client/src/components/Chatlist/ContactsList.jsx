@@ -5,13 +5,27 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { BiArrowBack, BiSearchAlt2 } from "react-icons/bi";
 import ChatLIstItem from "./ChatLIstItem";
-
+// useStateProvider: Destructures an empty state object and the dispatch function from context (likely for future implementation).
+// allContacts: Stores all retrieved contacts initially as an empty object.
+// searchTerm: Tracks the current search query entered by the user.
+// searchContacts: Stores the filtered contacts based on the search query.
 function ContactsList() {
   const [{}, dispatch] = useStateProvider();
   const [allContacts, setAllContacts] = useState({});
   const [searchTerm, setsearchTerm] = useState("");
   const [searchContacts, setSearchContacts] = useState([]);
 
+  // Search Filter (useEffect):
+
+  // First useEffect: Runs whenever searchTerm changes.
+  // Checks if the search term has any length (characters entered).
+  // If so, iterates through allContacts:
+  // Initializes an empty object filteredData for storing filtered contacts.
+  // Loops through each key (letter) in allContacts and filters the corresponding value (contact list) using the search term.
+  // Filters contacts where the name (converted to lowercase) includes the lowercase search term.
+  // Removes keys from filteredData if the filtered contact list for that key is empty.
+  // Sets searchContacts to the filtered data.
+  // If the search term is empty, sets searchContacts back to the original allContacts.
   useEffect(() => {
     if (searchTerm.length) {
       const filteredData = {};
@@ -31,6 +45,16 @@ function ContactsList() {
     }
   }, [searchTerm]);
 
+  // Fetching Contacts (useEffect):
+
+  // Second useEffect: Runs only once after the component mounts.
+  // Defines an async function getContacts to fetch contacts:
+  // Makes a GET request to the GET_ALL_CONTACTS API endpoint using axios.
+  // Upon successful response:
+  // Extracts the users data from the response.
+  // Sets allContacts and searchContacts states to the retrieved users data.
+  // Catches and logs any errors during the API request.
+  // Calls the getContacts function immediately after defining it.
   useEffect(() => {
     const getContacts = async () => {
       try {

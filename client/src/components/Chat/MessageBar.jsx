@@ -1,3 +1,10 @@
+// React Hooks: Imports useState, useEffect, useRef for managing component state, side effects, and references.
+// Icons: Imports icons from various libraries (react-icons, emoji-picker-react) for visual elements.
+// Context and Reducer: Imports useStateProvider for accessing context state (including user and chat information), and reducerCases from the context's constants.
+// Networking: Imports axios for making API requests and ADD_MESSAGE_ROUTE, ADD_IMAGE_MESSAGE_ROUTE from utilities for API endpoint URLs.
+// Components: Imports EmojiPicker for emoji selection, dynamic for code-splitting, and PhotoPicker for image attachment.
+// CaptureAudio (dynamic): Imports the CaptureAudio component dynamically for audio recording, using dynamic for server-side rendering avoidance.
+
 import React, { useEffect, useRef, useState } from "react";
 import { BsEmojiSmile } from "react-icons/bs";
 import { ImAttachment } from "react-icons/im";
@@ -14,7 +21,10 @@ import PhotoPicker from "../common/PhotoPicker";
 const CaptureAudio = dynamic(() => import("@/components/common/CaptureAudio"), {
   ssr: false,
 });
-
+// message: Stores the current typed message content.
+// showEmojiPicker: Tracks whether the emoji picker is visible.
+// showAudioRecorder: Tracks whether the audio recorder is visible.
+// grabImage: Tracks whether the photo picker is triggered.
 export default function MessageBar() {
   const [message, setMessage] = useState("");
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
