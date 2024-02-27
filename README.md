@@ -96,18 +96,18 @@ Open your web browser and navigate to http://localhost:5000 to access the applic
 
 Authentication:
 
-/api/auth/check-user: Verifies user credentials (replace with your actual implementation).
-/api/auth/onBoardUser: Onboards new users (replace with your actual implementation).
-/api/auth/get-contacts: Fetches user contacts (replace with your actual implementation).
-/api/auth/generate-token/:userId: Generates an authentication token (replace with your actual implementation).
-Messages:
+- /api/auth/check-user: Verifies user credentials (replace with your actual implementation).
+- /api/auth/onBoardUser: Onboards new users (replace with your actual implementation).
+- /api/auth/get-contacts: Fetches user contacts (replace with your actual implementation).
+- /api/auth/generate-token/:userId: Generates an authentication token (replace with your actual implementation).
+  Messages:
 
-/api/messages/add-message: Sends a text message.
-/api/messages/get-messages/:from/:to: Retrieves messages between two users.
-/api/messages/get-initial-contacts/:from: Retrieves initial contacts with message details for a user.
-/api/messages/add-audio-message: Sends an audio message (file upload).
-/api/messages/add-image-message: Sends an image message (file upload).
-Real-Time Communication (Socket.IO):
+- /api/messages/add-message: Sends a text message.
+- /api/messages/get-messages/:from/:to: Retrieves messages between two users.
+- /api/messages/get-initial-contacts/:from: Retrieves initial contacts with message details for a user.
+- /api/messages/add-audio-message: Sends an audio message (file upload).
+- /api/messages/add-image-message: Sends an image message (file upload).
+  Real-Time Communication (Socket.IO):
 
 The server uses Socket.IO to enable real-time communication features, including:
 Presence management (indicating online users)
